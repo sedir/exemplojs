@@ -5,6 +5,9 @@ import json
 from .models import Contato
 
 
+from django.core import serializers
+
+
 def index(request):
     form = ContatoForm()
     return render(request, 'agenda/index.html', {'form': form})
@@ -13,11 +16,12 @@ def index(request):
 def listar_json(request):
     contatos = Contato.objects.all()
 
-    json.dumps(contatos)
-    return HttpResponse(contatos, content_type='application/json')
+    json_str = serializers.serialize('json', contatos)
+    return HttpResponse(json_str, content_type='application/json')
 
 def novo(request):
     contato = Contato(nome=request.POST['nome'], email=request.POST['email'], telefone=request.POST['telefone'])
     contato.save()
 
-    return HttpResponse()
+    json_str = serializers.serialize('json', [contato, ])
+    return HttpResponse(json_str, content_type='application/json')

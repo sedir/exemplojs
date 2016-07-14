@@ -7,7 +7,7 @@
         <h3>Listagem da agenda</h3>
     </div>
 
-    <table class="table table-hover" id="tabela">
+    <table class="table table-hover tablesorter" id="tabela">
         <thead>
             <tr>
                 <th>Nome</th>
@@ -15,7 +15,7 @@
                 <th>E-mail</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="contatos_tbody">
 
         </tbody>
     </table>
@@ -25,17 +25,83 @@
 
     </div>
 
+
     {% bootstrap_form form %}
 
-    {% bootstrap_button "Salvar" button_type="button" button_class="btn-primary" name="salvar" %}
+    <a class="btn btn-primary" id="salvar">Salvar</a>
+
+
 
 {% endblock content %}
 
 {% block script %}
 
+    // using jQuery
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function loadContatos(){
+        $.get( "/listar", function(data){
+            $('#contatos_tbody').html('');
+            $.each(data, function (index, value) {
+                campos = value.fields;
+                $('<tr>').append(
+                    $('<td>').text(campos.nome),
+                    $('<td>').text(campos.telefone),
+                    $('<td>').text(campos.email)).appendTo('#contatos_tbody');
+            });
+
+            $('#tabela').tablesorter({
+                theme : 'bootstrap2',
+                sortList: [[0,0],[1,0]]
+            });
+
+        });
+    }
+
+
+
     $(function() {
 
-      // ...
+        loadContatos();
+
+
+        $('#salvar').click(function(){
+            nome = $('#id_nome').val()
+            telefone = $('#id_telefone').val()
+            email = $('#id_email').val()
+            csrftoken = getCookie('csrftoken');
+
+
+            $.post( "/novo", {  nome: nome,
+                                telefone: telefone,
+                                email: email,
+                                csrfmiddlewaretoken: csrftoken } ).done(function(data){
+                $('#id_nome').val('')
+                $('#id_telefone').val('')
+                $('#id_email').val('')
+
+                loadContatos();
+
+            }).fail(function(data){
+                alert('Fudeu!')
+            });
+
+        })
+
 
     });
 

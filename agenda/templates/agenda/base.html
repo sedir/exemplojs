@@ -1,4 +1,5 @@
 {% load bootstrap3 %}
+{% load staticfiles %}
 
 <!DOCTYPE html>
 <html lang="pt">
@@ -47,6 +48,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 {% bootstrap_css %}
 {% bootstrap_javascript %}
+
+<link rel="stylesheet" href="{% static 'agenda/css/theme.bootstrap_2.min.css' %}">
+<script src="{% static 'agenda/js/jquery.tablesorter.min.js' %}"></script>
+
 
 <script type="text/javascript">
     {% block script %}{% endblock %}
