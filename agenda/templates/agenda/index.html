@@ -1,0 +1,42 @@
+{% extends 'agenda/base.html' %}
+
+{% load bootstrap3 %}
+
+{% block content %}
+    <div class="page-header">
+        <h3>Listagem da agenda</h3>
+    </div>
+
+    <table class="table table-hover" id="tabela">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>E-mail</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <div class="page-header">
+        <h3>Novo contato</h3>
+
+    </div>
+
+    {% bootstrap_form form %}
+
+    {% bootstrap_button "Salvar" button_type="button" button_class="btn-primary" name="salvar" %}
+
+{% endblock content %}
+
+{% block script %}
+
+    $(function() {
+
+      // ...
+
+    });
+
+{% endblock script %}
